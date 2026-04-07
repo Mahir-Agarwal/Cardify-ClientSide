@@ -3,7 +3,7 @@
   <h1>📱 Cardify - Mobile Client</h1>
   
   <p>
-    <strong>A stunning, Neo-Brutalist Android application for secure, Peer-to-Peer card sharing and discount management.</strong>
+    <strong>A stunning, Neo-Brutalist Android application for secure, Peer-to-Peer card sharing and discount management</strong>
   </p>
 
   <p>
