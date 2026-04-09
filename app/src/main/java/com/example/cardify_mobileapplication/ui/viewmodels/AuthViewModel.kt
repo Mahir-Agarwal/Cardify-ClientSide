@@ -26,6 +26,7 @@ class AuthViewModel(
             
             val response = apiService.login(LoginRequest(email, pass))
             tokenManager.saveToken(response.token)
+            response.id?.let { tokenManager.saveUserId(it) }
             response.name?.let { tokenManager.saveUserName(it) }
             tokenManager.saveProfileStats(
                 response.rating ?: 0.0,
@@ -45,6 +46,7 @@ class AuthViewModel(
             
             val response = apiService.register(RegisterRequest(name, email, pass, finalRole))
             tokenManager.saveToken(response.token)
+            response.id?.let { tokenManager.saveUserId(it) }
             response.name?.let { tokenManager.saveUserName(it) }
             tokenManager.saveProfileStats(
                 response.rating ?: 0.0,

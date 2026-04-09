@@ -6,6 +6,8 @@ import com.example.cardify_mobileapplication.data.network.OrderRequestDto
 import com.example.cardify_mobileapplication.data.network.ReviewDto
 import com.example.cardify_mobileapplication.ui.base.BaseViewModel
 import com.example.cardify_mobileapplication.ui.screens.order.OrderStatus
+import com.example.cardify_mobileapplication.data.local.TokenManager
+import kotlinx.coroutines.flow.firstOrNull
 
 data class OrderInfo(
     val id: String,
@@ -15,16 +17,19 @@ data class OrderInfo(
     val role: String // BUYER or OWNER
 )
 
-class OrderViewModel(private val apiService: ApiService) : BaseViewModel<List<OrderInfo>>() {
-    
+class OrderViewModel(
+    private val apiService: ApiService,
+    private val tokenManager: TokenManager
+) : BaseViewModel<List<OrderInfo>>() {
     private suspend fun fetchOrdersInternal(): List<OrderInfo> {
+        val currentUserId = tokenManager.userId.firstOrNull() ?: -1L
         return apiService.getMyOrders().map { dto ->
             OrderInfo(
                 id = dto.id.toString(),
-                amount = "$${dto.amount}",
-                commission = "$${dto.commission}",
+                amount = "₹${dto.amount}",
+                commission = "₹${dto.commission}",
                 status = dto.status,
-                role = "USER"
+                role = if (dto.ownerId == currentUserId) "OWNER" else "BUYER"
             )
         }
     }
@@ -48,10 +53,9 @@ class OrderViewModel(private val apiService: ApiService) : BaseViewModel<List<Or
         }
     }
 
-    fun simulatePayment() {
+    fun simulatePayment(orderId: String) {
         executeUseCase {
-            // Assume 123 for now since it's hardcoded in UI flow
-            apiService.payOrder("123")
+            apiService.payOrder(orderId)
             fetchOrdersInternal()
         }
     }
@@ -63,9 +67,23 @@ class OrderViewModel(private val apiService: ApiService) : BaseViewModel<List<Or
         }
     }
 
-    fun confirmDelivery(orderId: String) {
+    fun confirmInfo(orderId: String) {
         executeUseCase {
-            apiService.confirmDelivery(orderId)
+            apiService.confirmInfo(orderId)
+            fetchOrdersInternal()
+        }
+    }
+
+    fun markDelivered(orderId: String) {
+        executeUseCase {
+            apiService.markDelivered(orderId)
+            fetchOrdersInternal()
+        }
+    }
+
+    fun disputeOrder(orderId: String) {
+        executeUseCase {
+            apiService.disputeOrder(orderId)
             fetchOrdersInternal()
         }
     }

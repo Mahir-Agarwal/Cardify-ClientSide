@@ -90,11 +90,11 @@ fun CardifyNavGraph(navController: NavHostController) {
             OrderDetailScreen(navController, orderId)
         }
         composable(
-            route = "${Routes.CHAT}/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+            route = "${Routes.CHAT}/{orderId}",
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
         ) {
-            val userId = it.arguments?.getString("userId")
-            ChatScreen(navController, userId)
+            val orderIdStr = it.arguments?.getString("orderId")
+            ChatScreen(navController, orderId = orderIdStr?.toLongOrNull() ?: 0L)
         }
         composable(
             route = "${Routes.REVIEW}/{orderId}",

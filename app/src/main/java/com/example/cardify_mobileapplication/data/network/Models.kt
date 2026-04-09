@@ -38,8 +38,8 @@ data class OrderDto(
     val commission: Double,
     val status: String,
     val cardId: Long,
-    val buyerName: String?,
-    val ownerName: String?
+    val buyerId: Long,
+    val ownerId: Long
 )
 data class OrderRequestDto(val cardId: Int, val amount: Double, val commission: Double)
 data class ChatMessageDto(val receiverId: Int, val message: String)

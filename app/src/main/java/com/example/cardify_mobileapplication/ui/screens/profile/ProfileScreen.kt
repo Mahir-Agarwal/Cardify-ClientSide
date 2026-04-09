@@ -121,7 +121,7 @@ fun ProfileScreen(
             ) {
                 StatCard(if (userRating == null || userRating == 0.0) "NEW" else String.format("%.1f", userRating), "RATING", Icons.Default.Star)
                 StatCard("${totalOrders ?: 0}", "ORDERS", Icons.Default.ShoppingCart)
-                StatCard("$${String.format("%.1f", earnedAmount ?: 0.0)}", "EARNED", Icons.Default.ShoppingCart)
+                StatCard("₹${String.format("%.1f", earnedAmount ?: 0.0)}", "EARNED", Icons.Default.ShoppingCart)
             }
 
             Row(

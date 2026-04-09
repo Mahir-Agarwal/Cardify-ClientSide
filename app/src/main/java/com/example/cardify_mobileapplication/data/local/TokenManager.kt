@@ -10,6 +10,7 @@ private val Context.dataStore by preferencesDataStore("user_prefs")
 
 class TokenManager(private val context: Context) {
     companion object {
+        private val USER_ID_KEY = longPreferencesKey("user_id")
         private val JWT_TOKEN_KEY = stringPreferencesKey("jwt_token")
         private val USER_NAME_KEY = stringPreferencesKey("user_name")
         private val USER_RATING_KEY = doublePreferencesKey("user_rating")
@@ -20,6 +21,8 @@ class TokenManager(private val context: Context) {
     val jwtToken: Flow<String?> = context.dataStore.data.map { preferences ->
         preferences[JWT_TOKEN_KEY]
     }
+    
+    val userId: Flow<Long?> = context.dataStore.data.map { it[USER_ID_KEY] }
 
     val userName: Flow<String?> = context.dataStore.data.map { it[USER_NAME_KEY] }
     val userRating: Flow<Double?> = context.dataStore.data.map { it[USER_RATING_KEY] }
@@ -29,6 +32,12 @@ class TokenManager(private val context: Context) {
     suspend fun saveToken(token: String) {
         context.dataStore.edit { preferences ->
             preferences[JWT_TOKEN_KEY] = token
+        }
+    }
+
+    suspend fun saveUserId(id: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[USER_ID_KEY] = id
         }
     }
 
@@ -49,6 +58,7 @@ class TokenManager(private val context: Context) {
     suspend fun clearToken() {
         context.dataStore.edit { preferences ->
             preferences.remove(JWT_TOKEN_KEY)
+            preferences.remove(USER_ID_KEY)
         }
     }
 }

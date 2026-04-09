@@ -100,7 +100,7 @@ fun OrderRequestScreen(
             NeoTextField(
                 value = amount,
                 onValueChange = { amount = it },
-                label = "ORDER AMOUNT ($)",
+                label = "ORDER AMOUNT (₹)",
                 keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
@@ -118,19 +118,19 @@ fun OrderRequestScreen(
                 Column {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("ORDER VALUE", color = NeoBlack, fontWeight = FontWeight.Bold)
-                        Text("$${String.format("%.2f", amountValue)}", fontWeight = FontWeight.Black, color = NeoBlack)
+                        Text("₹${String.format("%.2f", amountValue)}", fontWeight = FontWeight.Black, color = NeoBlack)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("OWNER COMMISSION", color = NeoBlack, fontWeight = FontWeight.Bold)
-                        Text("$${String.format("%.2f", commissionValue)}", fontWeight = FontWeight.Black, color = NeoRed)
+                        Text("₹${String.format("%.2f", commissionValue)}", fontWeight = FontWeight.Black, color = NeoRed)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     HorizontalDivider(color = Color.Black, thickness = 3.dp)
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("TOTAL COST", fontWeight = FontWeight.Black, color = NeoBlack, style = MaterialTheme.typography.titleLarge)
-                        Text("$${String.format("%.2f", amountValue + commissionValue)}", fontWeight = FontWeight.Black, color = NeoGreen, style = MaterialTheme.typography.titleLarge)
+                        Text("₹${String.format("%.2f", amountValue + commissionValue)}", fontWeight = FontWeight.Black, color = NeoGreen, style = MaterialTheme.typography.titleLarge)
                     }
                 }
             }

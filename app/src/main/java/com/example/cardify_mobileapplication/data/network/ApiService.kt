@@ -55,8 +55,14 @@ interface ApiService {
     @PUT("orders/{orderId}/place")
     suspend fun placeExternalOrder(@Path("orderId") orderId: String, @Query("externalOrderId") externalOrderId: String)
 
-    @PUT("orders/{orderId}/confirm")
-    suspend fun confirmDelivery(@Path("orderId") orderId: String)
+    @PUT("orders/{orderId}/confirm-info")
+    suspend fun confirmInfo(@Path("orderId") orderId: String)
+
+    @PUT("orders/{orderId}/delivered")
+    suspend fun markDelivered(@Path("orderId") orderId: String)
+
+    @PUT("orders/{orderId}/dispute")
+    suspend fun disputeOrder(@Path("orderId") orderId: String)
 
     // 4. Chat Module
     @POST("chat/{orderId}")

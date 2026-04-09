@@ -27,7 +27,7 @@ import com.example.cardify_mobileapplication.ui.viewmodels.OrderViewModel
 import com.example.cardify_mobileapplication.utils.UiState
 
 enum class OrderStatus {
-    REQUESTED, ACCEPTED, PAID, ORDER_PLACED, COMPLETED
+    REQUESTED, ACCEPTED, INFO_CONFIRMED, ESCROW_FUNDED, ORDER_PLACED, COMPLETED, DISPUTED
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,11 +38,21 @@ fun OrderDetailScreen(
     viewModel: OrderViewModel = viewModel(factory = AppViewModelFactory(LocalContext.current))
 ) {
     var orderStatus by remember { mutableStateOf(OrderStatus.REQUESTED) }
+    var orderRole by remember { mutableStateOf("USER") }
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchOrders()
+    }
+
     LaunchedEffect(uiState) {
-        if (uiState is UiState.Success && (uiState as UiState.Success<*>).data is OrderStatus) {
-            orderStatus = (uiState as UiState.Success<*>).data as OrderStatus
+        if (uiState is UiState.Success) {
+            val list = (uiState as UiState.Success<*>).data as? List<*>
+            val currentOrder = list?.find { (it as? com.example.cardify_mobileapplication.ui.viewmodels.OrderInfo)?.id == orderId } as? com.example.cardify_mobileapplication.ui.viewmodels.OrderInfo
+            currentOrder?.let {
+                orderStatus = OrderStatus.valueOf(it.status)
+                orderRole = it.role
+            }
         }
     }
 
@@ -79,7 +89,7 @@ fun OrderDetailScreen(
                             .border(3.dp, Color.Black, RectangleShape)
                             .neoShadow(offsetY = 4f, offsetX = 4f)
                             .background(NeoGreen)
-                            .clickable { navController.navigate("${Routes.CHAT}/owner_123") },
+                            .clickable { navController.navigate("${Routes.CHAT}/${orderId ?: ""}") },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = "Chat", tint = NeoBlack)
@@ -98,13 +108,7 @@ fun OrderDetailScreen(
                     NeoStepper(
                         modifier = Modifier.fillMaxWidth(),
                         currentStep = orderStatus.ordinal,
-                        steps = listOf(
-                            "REQ",
-                            "ACC",
-                            "PAY",
-                            "PLC",
-                            "DONE"
-                        )
+                        steps = listOf("REQ", "ACC", "INFO", "FUND", "PLC", "DONE")
                     )
                     Spacer(modifier = Modifier.height(48.dp))
                 }
@@ -117,49 +121,65 @@ fun OrderDetailScreen(
                         Column {
                             when (orderStatus) {
                                 OrderStatus.REQUESTED -> {
-                                    Text("WAITING FOR OWNER TO ACCEPT YOUR REQUEST.", color = NeoBlack, fontWeight = FontWeight.Bold)
-                                    Spacer(modifier = Modifier.height(32.dp))
-                                    NeoButton(
-                                        text = "SIMULATE OWNER ACCEPT",
-                                        onClick = { viewModel.acceptOrder(orderId ?: "123") },
-                                        backgroundColor = NeoBlue
-                                    )
+                                    if (orderRole == "OWNER") {
+                                        Text("ACTION REQUIRED: ACCEPT THIS REQUEST", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(32.dp))
+                                        NeoButton(text = "ACCEPT ORDER", onClick = { viewModel.acceptOrder(orderId ?: "") }, backgroundColor = NeoGreen)
+                                    } else {
+                                        Text("WAITING FOR OWNER TO ACCEPT.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                    }
                                 }
                                 OrderStatus.ACCEPTED -> {
-                                    Text("REQUEST ACCEPTED! PLEASE PAY THE ESCROW AMOUNT.", color = NeoBlack, fontWeight = FontWeight.Bold)
-                                    Spacer(modifier = Modifier.height(32.dp))
-                                    NeoButton(
-                                        text = "PAY ESCROW ($1,250)",
-                                        onClick = { viewModel.simulatePayment() },
-                                        backgroundColor = NeoGreen
-                                    )
+                                    if (orderRole == "BUYER") {
+                                        Text("REQUEST ACCEPTED! PLEASE SHARE AMAZON LINKS & DELIVERY ADDRESS IN CHAT.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        Text("Waiting for Owner to confirm they understand the instructions.", color = NeoBlack, style = MaterialTheme.typography.bodyMedium)
+                                    } else {
+                                        Text("PLEASE REVIEW CHAT. ONCE YOU UNDERSTAND THE BUYER'S INSTRUCTIONS, CONFIRM BELOW.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(32.dp))
+                                        NeoButton(text = "INFO CONFIRMED & UNDERSTOOD", onClick = { viewModel.confirmInfo(orderId ?: "") }, backgroundColor = NeoBlue)
+                                    }
                                 }
-                                OrderStatus.PAID -> {
-                                    Text("PAYMENT CONFIRMED. WAITING FOR ORDER PLACEMENT.", color = NeoBlack, fontWeight = FontWeight.Bold)
-                                    Spacer(modifier = Modifier.height(32.dp))
-                                    NeoButton(
-                                        text = "SIMULATE ORDER PLACE",
-                                        onClick = { viewModel.placeOrder(orderId ?: "123") },
-                                        backgroundColor = NeoBlue
-                                    )
+                                OrderStatus.INFO_CONFIRMED -> {
+                                    if (orderRole == "BUYER") {
+                                        Text("OWNER CONFIRMED INSTRUCTIONS. PLEASE FUND THE ESCROW.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(32.dp))
+                                        NeoButton(text = "PAY ESCROW securely", onClick = { viewModel.simulatePayment(orderId ?: "") }, backgroundColor = NeoBlue)
+                                    } else {
+                                        Text("AWAITING BUYER ESCROW PAYMENT. DO NOT PURCHASE ANYTHING YET.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                OrderStatus.ESCROW_FUNDED -> {
+                                    if (orderRole == "OWNER") {
+                                        Text("ESCROW FUNDED 100%. PLEASE PURCHASE THE ITEM ON AMAZON NOW.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(32.dp))
+                                        NeoButton(text = "MARK AS ORDERED & SECURED", onClick = { viewModel.placeOrder(orderId ?: "") }, backgroundColor = NeoGreen)
+                                    } else {
+                                        Text("ESCROW FUNDED. OWNER IS PLACING THE EXTERNAL ORDER.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                    }
                                 }
                                 OrderStatus.ORDER_PLACED -> {
-                                    Text("ORDER HAS BEEN PLACED SUCCESSFULLY.", color = NeoBlack, fontWeight = FontWeight.Bold)
-                                    Spacer(modifier = Modifier.height(32.dp))
-                                    NeoButton(
-                                        text = "CONFIRM DELIVERY",
-                                        onClick = { viewModel.confirmDelivery(orderId ?: "123") },
-                                        backgroundColor = NeoGreen
-                                    )
+                                    if (orderRole == "BUYER") {
+                                        Text("ORDER HAS BEEN PLACED. AWAITING DELIVERY AT YOUR ADDRESS.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(32.dp))
+                                        NeoButton(text = "ITEM DELIVERED (RELEASE ESCROW)", onClick = { viewModel.markDelivered(orderId ?: "") }, backgroundColor = NeoGreen)
+                                    } else {
+                                        Text("ORDER PLACED. AWAITING BUYER TO VERIFY DELIVERY.", color = NeoBlack, fontWeight = FontWeight.Bold)
+                                        Spacer(modifier = Modifier.height(32.dp))
+                                        NeoButton(text = "RAISE DISPUTE (MISSING PAYMENT)", onClick = { viewModel.disputeOrder(orderId ?: "") }, backgroundColor = NeoRed)
+                                    }
                                 }
                                 OrderStatus.COMPLETED -> {
-                                    Text("ORDER COMPLETED! FUNDS RELEASED.", color = NeoBlack, fontWeight = FontWeight.Black)
+                                    Text("ORDER COMPLETED! ESCROW FUNDS RELEASED.", color = NeoBlack, fontWeight = FontWeight.Black)
                                     Spacer(modifier = Modifier.height(32.dp))
-                                    NeoButton(
-                                        text = "LEAVE A REVIEW",
-                                        onClick = { navController.navigate("${Routes.REVIEW}/${orderId ?: "unknown"}") },
-                                        backgroundColor = NeoBlue
-                                    )
+                                    if (orderRole == "BUYER") {
+                                        NeoButton(text = "LEAVE A REVIEW", onClick = { navController.navigate("${Routes.REVIEW}/${orderId ?: ""}") }, backgroundColor = NeoGreen)
+                                    }
+                                }
+                                OrderStatus.DISPUTED -> {
+                                    Text("ORDER DISPUTED. ADMIN INVESTIGATION REQUIRED.", color = NeoRed, fontWeight = FontWeight.Black)
+                                    Spacer(modifier = Modifier.height(32.dp))
+                                    Text("A Cardify moderator will review the tracking and chat logs to resolve this transaction.", color = NeoBlack, style = MaterialTheme.typography.bodyMedium)
                                 }
                             }
                         }

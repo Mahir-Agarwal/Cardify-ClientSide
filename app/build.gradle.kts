@@ -75,6 +75,13 @@ dependencies {
     // Google ML Kit Vision
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
+    // STOMP WebSockets (Krossbow)
+    implementation("org.hildan.krossbow:krossbow-stomp-core:5.10.0")
+    implementation("org.hildan.krossbow:krossbow-websocket-okhttp:5.10.0")
+
+    // WebRTC (P2P Zero-Leak Secure Channels)
+    implementation("io.getstream:stream-webrtc-android:1.1.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
