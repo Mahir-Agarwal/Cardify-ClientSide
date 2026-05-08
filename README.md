@@ -88,21 +88,26 @@ This repository contains the **Android Mobile Client** for the Cardify ecosystem
 | **Architecture** | MVVM | Clean separation of business logic and UI presentation states. |
 
 ---
-
 ## 🎥 Demo
 
 > **Watch Cardify in action here!**
 
 <div align="center">
 
-  <h3>👤 Owner POV</h3>
-  <img src="./CardifyOwner.gif" width="300"/>
-
-  <h3>🛒 Buyer POV</h3>
-  <img src="./CardifyBuyer.gif" width="300"/>
+<table>
+  <tr>
+    <td align="center">
+      <h3>👤 Owner POV</h3>
+      <img src="./CardifyOwner.gif" width="300"/>
+    </td>
+    <td align="center">
+      <h3>🛒 Buyer POV</h3>
+      <img src="./CardifyBuyer.gif" width="300"/>
+    </td>
+  </tr>
+</table>
 
 </div>
-
 ---
 
 ## 🚀 Roadmap & Currently Working On
