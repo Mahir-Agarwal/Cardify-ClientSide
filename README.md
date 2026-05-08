@@ -27,12 +27,13 @@
 
 ## 📖 Overview
 
-**Cardify** is a specialized platform that bridges the digital divide in modern e-commerce. Have you ever missed out on an exclusive Amazon or Flipkart discount because you didn't own the required HDFC or SBI card? Cardify solves this by safely connecting **Buyers** looking for offers with **Card Owners** who hold the right cards.
+**Cardify** is an Android app that lets people use bank card offers even if they don’t own that card.
 
-This repository contains the **Android Mobile Client** for the Cardify ecosystem. Built with a premium **Neo-Brutalism** design language, the app provides a highly fluid, responsive, and secure interface for users to browse shared cards, automatically scan their physical cards to the platform, and manage real-time rental lifecycles.
+If a discount requires an HDFC or SBI card, a **buyer** can connect with a **card owner** who has it and complete the purchase securely.
 
-> **Note:** The core engine powering this application lives in the [Cardify Backend Repository](https://github.com/Mahir-Agarwal/Cardify).
+This repo contains the **Android app**, built using Jetpack Compose. It focuses on a smooth UI, fast performance, and real-time order flow between buyers and owners.
 
+> Backend: https://github.com/Mahir-Agarwal/Cardify
 ---
 
 ## ✨ Key Features
@@ -108,13 +109,13 @@ This repository contains the **Android Mobile Client** for the Cardify ecosystem
 </table>
 
 </div>
+
 ---
 
 ## 🚀 Roadmap & Currently Working On
 
 We are actively developing new tools to enhance the peer-to-peer trading experience! Features currently in active development:
 
-- [ ] **💬 Live Chat Functionality**: Enabling direct secure messaging bridges between Buyers and Owners for context sharing.
 - [ ] **🌙 True Dark Theme**: Inverting the Neo-Brutalism styles (Pitch Black / Neon accents) for a glowing, high-contrast night mode.
 - [ ] **📟 OTP-Based Login**: Seamless, password-less authentication for higher security standards.
 - [ ] **💰 Live Wallet System**: Tracking total commission earned for owners and total cashback actively saved for buyers.
