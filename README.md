@@ -96,10 +96,10 @@ This repository contains the **Android Mobile Client** for the Cardify ecosystem
 <div align="center">
 
   <h3>👤 Owner POV</h3>
-  <img src="YOUR_OWNER_GIF_LINK_HERE" width="300"/>
+  <img src="./CardifyOwner.gif" width="300"/>
 
   <h3>🛒 Buyer POV</h3>
-  <img src="YOUR_BUYER_GIF_LINK_HERE" width="300"/>
+  <img src="./CardifyBuyer.gif" width="300"/>
 
 </div>
 
