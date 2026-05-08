@@ -3,11 +3,7 @@
   <h1>📱 Cardify - Mobile Client</h1>
   
   <p>
-<<<<<<< HEAD
-    <strong>A stunning, Neo-Brutalist Android application for secure, Peer-to-Peer card sharing and discount management</strong>
-=======
     <strong>A stunning, Neo-Brutalist Android application for secure, Peer-to-Peer card sharing and discount management.</strong>
->>>>>>> 7874dd0 (fixed some bugs and added working chat function usign webRTC)
   </p>
 
   <p>
@@ -97,11 +93,15 @@ This repository contains the **Android Mobile Client** for the Cardify ecosystem
 
 > **Watch Cardify in action here!**
 
-<<<<<<< HEAD
-*( coming )*
-=======
-*(Add your awesome Application GIF Demo here! Replace this text block with your image tag later.)*
->>>>>>> 7874dd0 (fixed some bugs and added working chat function usign webRTC)
+<div align="center">
+
+  <h3>👤 Owner POV</h3>
+  <img src="YOUR_OWNER_GIF_LINK_HERE" width="300"/>
+
+  <h3>🛒 Buyer POV</h3>
+  <img src="YOUR_BUYER_GIF_LINK_HERE" width="300"/>
+
+</div>
 
 ---
 
